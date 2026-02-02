@@ -250,7 +250,8 @@ setupworkfolder() {
 
   [[ -n "$INCLUDE_ZIPS" ]] && cp *.zip work 2>/dev/null
   
-  cp *.tf terraform.tfvars work 2>/dev/null
+  # inlcude *.tpl for terraform "template" local files
+  cp *.tf *.tpl terraform.tfvars work 2>/dev/null
 
   # If var env is not empty, copy from that folder also
   [[ "$env" != "" ]] && [[ -d "envs/$env" ]] && cp envs/${env}/*.tf envs/${env}/terraform.tfvars work 2>/dev/null
