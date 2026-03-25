@@ -53,13 +53,10 @@ is_tf_folder() {
     return 1
   fi
 
-  status=1
-  find "$folder" -maxdepth 1 -type f -name "*.tf" -print -quit 2>/dev/null | grep . >/dev/null
-
-  if [[ $? -eq 0 ]]; then
+  if find "$folder" -maxdepth 1 -type f -name "*.tf" -print -quit 2>/dev/null | grep -q .; then
     return 0
   else
-    echo "No files with extension 'tf' found in '$folder'."
+    echo "Error: no Terraform files (*.tf) found in '$folder'.\n"
     return 1
   fi
 }

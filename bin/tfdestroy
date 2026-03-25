@@ -3,7 +3,18 @@
 # source tfcommon from same bin folder
 . "$(dirname $(realpath $0))/tfcommon"
 
-is_tf_folder $folder || usage
+usage() {
+	echo "Usage: $0 [folder|folder/env]"
+	echo "Example: $0 aws"
+	echo "Example: $0 aws/dev"
+	exit 1
+}
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+	usage
+fi
+
+is_tf_folder "$folder" || exit 1
 
 setupworkfolder $folder || { echo "Failed to setup work folder $folder"; exit 1; }
 
