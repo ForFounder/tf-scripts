@@ -45,6 +45,26 @@ else
 fi
 
 ## Functions
+
+# Call early in apply scripts to capture optional CLI params
+parse_apply_opts() {
+  tf_targets=()
+  local prev=""
+  for arg in "$@"; do
+    [[ "$prev" == "--target" ]] && tf_targets+=("$arg")
+    prev="$arg"
+  done
+}
+
+# Returns formatted -target= args for terraform commands
+target_args() {
+  local args=()
+  for t in "${tf_targets[@]}"; do
+    args+=("-target=$t")
+  done
+  [[ ${#args[@]} -gt 0 ]] && echo "${args[*]}"
+}
+
 is_tf_folder() {
   local folder="$1"
 

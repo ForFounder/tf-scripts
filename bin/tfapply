@@ -3,12 +3,15 @@
 # source tfcommon from same bin folder
 . "$(dirname $(realpath $0))/tfcommon"
 
+parse_apply_opts "$@"
+
 is_tf_folder $folder || usage
 
 setupworkfolder $folder || { echo "Failed to setup work folder $folder"; exit 1; }
 
 terraform init -migrate-state -upgrade
 
-terraform plan -input=false -out plan.tfplan
+terraform plan -input=false $(target_args) -out plan.tfplan
 
-terraform apply -input=false "plan.tfplan"
+echo "TARGET ARGS ${target_args}"
+terraform apply -input=false $(target_args) "plan.tfplan"
