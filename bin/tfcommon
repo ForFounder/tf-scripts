@@ -73,13 +73,10 @@ is_tf_folder() {
     return 1
   fi
 
-  status=1
-  find "$folder" -maxdepth 1 -type f -name "*.tf" -print -quit 2>/dev/null | grep . >/dev/null
-
-  if [[ $? -eq 0 ]]; then
+  if find "$folder" -maxdepth 1 -type f -name "*.tf" -print -quit 2>/dev/null | grep -q .; then
     return 0
   else
-    echo "No files with extension 'tf' found in '$folder'."
+    echo "Error: no Terraform files (*.tf) found in '$folder'.\n"
     return 1
   fi
 }
@@ -270,7 +267,8 @@ setupworkfolder() {
 
   [[ -n "$INCLUDE_ZIPS" ]] && cp *.zip work 2>/dev/null
   
-  cp *.tf terraform.tfvars work 2>/dev/null
+  # inlcude *.tpl for terraform "template" local files
+  cp *.tf *.tpl terraform.tfvars work 2>/dev/null
 
   # If var env is not empty, copy from that folder also
   [[ "$env" != "" ]] && [[ -d "envs/$env" ]] && cp envs/${env}/*.tf envs/${env}/terraform.tfvars work 2>/dev/null
