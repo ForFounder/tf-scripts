@@ -18,8 +18,17 @@ is_tf_folder "$folder" || exit 1
 
 setupworkfolder $folder || { echo "Failed to setup work folder $folder"; exit 1; }
 
-terraform init -migrate-state -upgrade
+terraform init
 
 terraform plan -input=false -out plan.tfplan
 
 terraform apply "plan.tfplan"
+apply_exit=$?
+
+target="${folder}${env:+/$env}"
+if [[ $apply_exit -eq 0 ]]; then
+  echo -e "\e[34mApply for ${target} complete SUCCESS\e[0m"
+else
+  echo -e "\e[31mApply for ${target} FAILED\e[0m"
+fi
+exit $apply_exit

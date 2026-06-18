@@ -26,6 +26,15 @@ setupworkfolder $folder || { echo "Failed to setup work folder $folder"; exit 1;
 
 terraform fmt -check -v
 
-terraform init -migrate-state -upgrade
+terraform init
 
 terraform plan -input=false -out plan.tfplan
+plan_exit=$?
+
+target="${folder}${env:+/$env}"
+if [[ $plan_exit -eq 0 ]]; then
+  echo -e "\e[34mPlan for ${target} complete SUCCESS\e[0m"
+else
+  echo -e "\e[31mPlan for ${target} FAILED\e[0m"
+fi
+exit $plan_exit
