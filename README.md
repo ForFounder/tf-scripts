@@ -20,6 +20,8 @@ A backend based on AWS S3 and Dynamo.  See: https://registry.terraform.io/module
 
 The core logic shared by all of these is in the tfcommon file
 
+For full command syntax and options see [USAGE.md](USAGE.md).
+
 ### job.vars options:
  - `AWS_DEPLOY_PROFILE` : profile to use to deploy from this environment
  - `TERRAFORM_AWS_BACKEND_PROFILE` : profile to use to access AWS S3 Backend

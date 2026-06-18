@@ -3,6 +3,9 @@
 # source tfcommon from same bin folder
 . "$(dirname $(realpath $0))/tfcommon"
 
+parse_apply_opts "$@"
+
+is_tf_folder $folder || usage
 usage() {
   echo "Usage: $0 [folder|folder/env]"
   echo "Example: $0 aws"
@@ -20,8 +23,9 @@ setupworkfolder $folder || { echo "Failed to setup work folder $folder"; exit 1;
 
 terraform init
 
-terraform plan -input=false -out plan.tfplan
+terraform plan -input=false $(target_args) -out plan.tfplan
 
+terraform apply -input=false $(target_args) "plan.tfplan"
 terraform apply "plan.tfplan"
 apply_exit=$?
 
